@@ -55,5 +55,5 @@ class Clustering_Runner():
             #     cm = clustering_metrics(feas['true_labels'], predict_labels)
             #     cm.evaluationClusterModelFromLabel()
 
-        with open('embedding.pkl', 'wb') as f:
+        with open(self.data_name + '.embedding.pkl', 'wb') as f:
             pkl.dump(emb, f)

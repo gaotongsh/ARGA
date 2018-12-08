@@ -43,11 +43,13 @@ def load_data(dataset):
     features = sp.lil_matrix(features)
 
     y_dict = {}
+    prior = []
     with open(filename + '.circles') as f:
         lines = f.readlines()
         i = 0
         for l in lines:
             words = l.split()
+            prior.append(len(words) - 1)
             for w in words[1:]:
                 if int(w) in node_map:
                     if not int(w) in y_dict:
@@ -63,9 +65,16 @@ def load_data(dataset):
         else:
             ordered_y.append(y_dict[k])
 
-    with open('labels.pkl', 'wb') as f:
-        pkl.dump(ordered_y, f)
+    for v in ordered_y:
+        if v[0] != -1:
+            v.sort(key=lambda k: prior[k], reverse=True)
+
     print(ordered_y)
+
+    with open(dataset + '.n.labels.pkl', 'wb') as f:
+        pkl.dump(ordered_y, f)
+
+    exit()
 
     # with open('label.txt', 'w') as f:
     #     for v in ordered_y:

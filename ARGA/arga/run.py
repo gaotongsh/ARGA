@@ -10,12 +10,15 @@ dataname = '698'       # 'cora' or 'citeseer' or 'pubmed'
 model = 'arga_ae'          # 'arga_ae' or 'arga_vae'
 task = 'clustering'         # 'clustering' or 'link_prediction'
 
-settings = settings.get_settings(dataname, model, task)
+# dataname = [0, 107, 348, 414, 686, 698, 1684, 1912, 3437, 3980]
+dataname = [3980]
 
-if task == 'clustering':
-    runner = Clustering_Runner(settings)
-else:
-    runner = Link_pred_Runner(settings)
+for d in dataname:
+    s = settings.get_settings(str(d), model, task)
+    if task == 'clustering':
+        runner = Clustering_Runner(s)
+    else:
+        runner = Link_pred_Runner(s)
 
-runner.erun()
+    runner.erun()
 
