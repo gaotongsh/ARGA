@@ -17,6 +17,65 @@ def sample_mask(idx, l):
     return np.array(mask, dtype=np.bool)
 
 def load_data(dataset):
+    filename = 'data/facebook/' + dataset
+
+    g = np.loadtxt(filename + '.edges')
+    graph = nx.Graph()
+    for i in g:
+        graph.add_edge(int(i[0]), int(i[1]))
+    adj = nx.adjacency_matrix(graph)
+    node_list = list(graph.nodes)
+    i = 0
+    node_map = {}
+    for n in node_list:
+        node_map[int(n)] = int(i)
+        i += 1
+
+    node_num = len(graph.nodes)
+
+    f = np.loadtxt(filename + '.feat')
+    feature_number = f.shape[1] - 1
+    features = np.ndarray((node_num, feature_number))
+    for i in f:
+        if int(i[0]) in node_map:
+            features[node_map[int(i[0])]] = i[1:]
+
+    features = sp.lil_matrix(features)
+
+    y_dict = {}
+    with open(filename + '.circles') as f:
+        lines = f.readlines()
+        i = 0
+        for l in lines:
+            words = l.split()
+            for w in words[1:]:
+                if int(w) in node_map:
+                    if not int(w) in y_dict:
+                        y_dict[int(w)] = [i]
+                    else:
+                        y_dict[int(w)].append(i)
+            i += 1
+
+    ordered_y = []
+    for k, v in node_map.items():
+        if k not in y_dict:
+            ordered_y.append([-1])
+        else:
+            ordered_y.append(y_dict[k])
+
+    with open('labels.pkl', 'wb') as f:
+        pkl.dump(ordered_y, f)
+    print(ordered_y)
+
+    # with open('label.txt', 'w') as f:
+    #     for v in ordered_y:
+    #         for l in v:
+    #             f.write(str(l) + ' ')
+    #         f.write('\n')
+
+    return adj, features, None, None, None, None, None
+
+    # Previous result
     # load the data: x, tx, allx, graph
     names = ['x', 'y', 'tx', 'ty', 'allx', 'ally', 'graph']
     objects = []

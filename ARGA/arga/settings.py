@@ -14,7 +14,7 @@ flags.DEFINE_float('weight_decay', 0., 'Weight for L2 loss on embedding matrix.'
 flags.DEFINE_float('dropout', 0., 'Dropout rate (1 - keep probability).')
 flags.DEFINE_integer('features', 1, 'Whether to use features (1) or not (0).')
 flags.DEFINE_integer('seed', 50, 'seed for fixing the results.')
-flags.DEFINE_integer('iterations', 50, 'number of iterations.')
+flags.DEFINE_integer('iterations', 200, 'number of iterations.')
 
 '''
 infor: number of clusters 
@@ -40,7 +40,7 @@ def get_settings(dataname, model, task):
 
     if task == 'clustering':
         iterations = FLAGS.iterations
-        clustering_num = infor[dataname]
+        clustering_num = 3
         re = {'data_name': dataname, 'iterations' : iterations, 'clustering_num' :clustering_num, 'model' : model}
     elif task == 'link_prediction':
         iterations = 4 * FLAGS.iterations

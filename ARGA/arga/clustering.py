@@ -2,6 +2,8 @@ from __future__ import division
 from __future__ import print_function
 from sklearn.cluster import KMeans
 import os
+import numpy as np
+import pickle as pkl
 
 # Train on CPU (hide GPU) due to memory constraints
 os.environ['CUDA_VISIBLE_DEVICES'] = ""
@@ -44,11 +46,14 @@ class Clustering_Runner():
 
         # Train model
         for epoch in range(self.iteration):
-            emb, _ = update(ae_model, opt, sess, feas['adj_norm'], feas['adj_label'], feas['features'], placeholders, feas['adj'])
+            emb, avg_cost = update(ae_model, opt, sess, feas['adj_norm'], feas['adj_label'], feas['features'], placeholders, feas['adj'])
+            print(epoch, avg_cost)
+            # if (epoch+1) % 2 == 0:
+            #     kmeans = KMeans(n_clusters=self.n_clusters, random_state=0).fit(emb)
+            #     print("Epoch:", '%04d' % (epoch + 1))
+            #     predict_labels = kmeans.predict(emb)
+            #     cm = clustering_metrics(feas['true_labels'], predict_labels)
+            #     cm.evaluationClusterModelFromLabel()
 
-            if (epoch+1) % 2 == 0:
-                kmeans = KMeans(n_clusters=self.n_clusters, random_state=0).fit(emb)
-                print("Epoch:", '%04d' % (epoch + 1))
-                predict_labels = kmeans.predict(emb)
-                cm = clustering_metrics(feas['true_labels'], predict_labels)
-                cm.evaluationClusterModelFromLabel()
+        with open('embedding.pkl', 'wb') as f:
+            pkl.dump(emb, f)

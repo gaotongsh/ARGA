@@ -6,7 +6,7 @@ from link_prediction import Link_pred_Runner
 import os
 os.environ['KMP_DUPLICATE_LIB_OK'] = 'True'
 
-dataname = 'cora'       # 'cora' or 'citeseer' or 'pubmed'
+dataname = '698'       # 'cora' or 'citeseer' or 'pubmed'
 model = 'arga_ae'          # 'arga_ae' or 'arga_vae'
 task = 'clustering'         # 'clustering' or 'link_prediction'
 
